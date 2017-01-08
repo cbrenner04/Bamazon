@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "0.0.1",
+  "description": "CLI Amazon-like application",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbrenner04/Bamazon.git"
+  },
+  "author": "Christopher Brenner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cbrenner04/Bamazon/issues"
+  },
+  "homepage": "https://github.com/cbrenner04/Bamazon#readme",
+  "dependencies": {
+    "inquirer": "^2.0.0",
+    "mysql": "^2.12.0"
+  }
+}
