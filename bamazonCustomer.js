@@ -57,7 +57,7 @@ function whatWouldYouLike() {
         }
     }]).then(function(answer) {
         return new Promise(function(resolve, reject) {
-            connection.query("SELECT stock_quantity FROM products WHERE item_id=?", answer.product_id, function(err, res) {
+            connection.query("SELECT * FROM products WHERE item_id=?", answer.product_id, function(err, res) {
                 if (err) reject(err);
                 resolve(res);
             });
@@ -80,6 +80,7 @@ function whatWouldYouLike() {
                 var product = object.answer.product_id;
                 connection.query("UPDATE products SET stock_quantity=? WHERE item_id=?", [newQuantity, product], function(err, res) {
                     if (err) throw err;
+                    console.log('Your total cost is $' + (object.result[0].price * object.answer.number_of_units).toFixed(2));
                     return;
                 });
             } else {
