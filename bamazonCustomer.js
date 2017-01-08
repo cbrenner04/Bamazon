@@ -1,4 +1,4 @@
-// Single entry
+// Basic requirements
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 
@@ -12,7 +12,6 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId);
     getAllProducts().then(function(result) {
         result.forEach(function(item) {
             console.log('Item ID: ' + item.item_id + ' | Product Name: ' + item.product_name + ' | Price: ' + item.price);
