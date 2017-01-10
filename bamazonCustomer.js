@@ -73,7 +73,7 @@ function whatWouldYouLike() {
             }
         }).catch(function(err) {
             console.log(err);
-            return;
+            connection.destroy();
         }).then(function(object) {
             if (object.answer) {
                 var newQuantity = object.result[0].stock_quantity - object.answer.number_of_units;
@@ -81,11 +81,11 @@ function whatWouldYouLike() {
                 connection.query("UPDATE products SET stock_quantity=? WHERE item_id=?", [newQuantity, product], function(err, res) {
                     if (err) throw err;
                     console.log('Your total cost is $' + (object.result[0].price * object.answer.number_of_units).toFixed(2));
-                    return;
+                    connection.destroy();
                 });
             } else {
                 console.log(object);
-                return;
+                connection.destroy();
             }
         });
     });

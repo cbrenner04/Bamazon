@@ -12,11 +12,15 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    startPrompt();
+    startPrompt().then(function(thing) {
+        connection.destroy();
+    }).catch(function(err) {
+        console.log(err);
+    });
 });
 
 function startPrompt() {
-    inquirer.prompt([{
+    return inquirer.prompt([{
         name: 'command',
         type: 'list',
         message: 'What would you like to do?',
@@ -27,33 +31,35 @@ function startPrompt() {
     }]).then(function(answer) {
         switch (answer.command) {
             case 'View Products for Sale':
-                viewProducts().then(function(result) {
-                    printItems(result);
+                return viewProducts().then(function(result) {
+                    return printItems(result);
                 }).catch(function(err) {
                     console.log(err);
+                    return;
                 });
-                break;
             case 'View Low Inventory':
-                viewLowInventory().then(function(result) {
-                    printItems(result);
+                return viewLowInventory().then(function(result) {
+                    return printItems(result);
                 }).catch(function(err) {
                     console.log(err);
+                    return;
                 });
-                break;
             case 'Add to Inventory':
-                addInventory().then(function() {
+                return addInventory().then(function() {
                     console.log('Successfully added items');
+                    return;
                 }).catch(function(err) {
                     console.log(err);
+                    return;
                 });
-                break;
             case 'Add New Product':
-                addProduct().then(function() {
+                return addProduct().then(function() {
                     console.log('Successfully added products');
+                    return;
                 }).catch(function(err) {
                     console.log(err);
+                    return;
                 });
-                break;
             default:
                 console.log('what?');
         }
