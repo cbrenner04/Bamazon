@@ -78,10 +78,26 @@ function whatWouldYouLike() {
             if (object.answer) {
                 var newQuantity = object.result[0].stock_quantity - object.answer.number_of_units;
                 var product = object.answer.product_id;
-                connection.query("UPDATE products SET stock_quantity=? WHERE item_id=?", [newQuantity, product], function(err, res) {
-                    if (err) throw err;
-                    console.log('Your total cost is $' + (object.result[0].price * object.answer.number_of_units).toFixed(2));
-                    connection.destroy();
+                var productSales = object.result[0].product_sales;
+                var totalCost = (object.result[0].price * object.answer.number_of_units).toFixed(2);
+                new Promise(function(resolve, reject) {
+                    connection.query("UPDATE products SET stock_quantity=? WHERE item_id=?", [newQuantity, product], function(err, res) {
+                        if (err) reject(err);
+                        console.log('Your total cost is $' + totalCost);
+                        resolve({ sales: productSales, cost: totalCost, product_id: product });
+                    });
+                }).then(function(object) {
+                    console.log(object.sales);
+                    var newProductSales = parseFloat(object.sales) + parseFloat(object.cost);
+                    var product = object.product_id;
+                    console.log("NEW: " + newProductSales);
+                    console.log("ID: " + product);
+                    connection.query("UPDATE products SET product_sales=? WHERE item_id=?", [newProductSales, product], function(err, res) {
+                        if (err) throw err;
+                        connection.destroy();
+                    });
+                }).catch(function(err) {
+                    console.log(err);
                 });
             } else {
                 console.log(object);

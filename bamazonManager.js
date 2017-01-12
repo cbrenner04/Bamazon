@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    startPrompt().then(function(thing) {
+    startPrompt().then(function(_res) {
         connection.destroy();
     }).catch(function(err) {
         console.log(err);
@@ -156,6 +156,7 @@ function addProduct() {
             }
         }
     }]).then(function(answer) {
+        answer.product_sales = 0;
         return runQuery("INSERT INTO products SET ?", answer);
     });
 }

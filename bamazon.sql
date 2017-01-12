@@ -19,3 +19,25 @@ VALUES (12, 'football', 'sporting goods', 9.99, 3),
        (78, 'Natural Ice (6 pack)', 'grocery', 4.99, 25),
        (84, 'Jif (crunchy)', 'grocery', 3.99, 15),
        (65, 'Gym Shoes', 'clothing', 35.79, 4);
+CREATE TABLE departments (
+    department_id INT NOT NULL,
+    department_name VARCHAR(250) NOT NULL,
+    over_head_costs DECIMAL(10 , 2 ) NOT NULL,
+    total_sales DECIMAL(10 , 2 ) NOT NULL,
+    UNIQUE KEY (department_id)
+);
+INSERT INTO departments(department_id, department_name, over_head_costs, total_sales)
+VALUES (1, 'sporting goods', 2000, 1500),
+       (2, 'movies and tv', 1500, 2000),
+       (3, 'books', 100, 200),
+       (4, 'office supplies', 1350, 1000),
+       (5, 'home goods', 1200, 200),
+       (6, 'grocery', 1234, 123),
+       (7, 'clothing', 1300, 1500);
+ALTER TABLE products
+ADD product_sales DECIMAL(10, 2);
+SET SQL_SAFE_UPDATES = 0;
+UPDATE products
+SET product_sales=0;
+SET SQL_SAFE_UPDATES = 1;
+SELECT * FROM products;
