@@ -38,6 +38,6 @@ ALTER TABLE products
 ADD product_sales DECIMAL(10, 2);
 SET SQL_SAFE_UPDATES = 0;
 UPDATE products
-SET product_sales=0;
+SET product_sales = 0;
 SET SQL_SAFE_UPDATES = 1;
 SELECT * FROM products;
