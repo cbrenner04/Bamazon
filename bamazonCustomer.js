@@ -65,7 +65,6 @@ function whatWouldYouLike() {
             if (answer.number_of_units > result[0].stock_quantity) {
                 return "Insufficient quantity!";
             } else {
-                console.log('You got it!');
                 var object = {};
                 object.answer = answer;
                 object.result = result;
@@ -87,11 +86,8 @@ function whatWouldYouLike() {
                         resolve({ sales: productSales, cost: totalCost, product_id: product });
                     });
                 }).then(function(object) {
-                    console.log(object.sales);
                     var newProductSales = parseFloat(object.sales) + parseFloat(object.cost);
                     var product = object.product_id;
-                    console.log("NEW: " + newProductSales);
-                    console.log("ID: " + product);
                     connection.query("UPDATE products SET product_sales=? WHERE item_id=?", [newProductSales, product], function(err, res) {
                         if (err) throw err;
                         connection.destroy();
