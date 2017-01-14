@@ -3,6 +3,7 @@ var mysql = require('mysql');
 var inquirer = require('inquirer');
 var keys = require('./keys.js');
 
+// mySQL info
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -11,9 +12,13 @@ var connection = mysql.createConnection({
     database: "Bamazon"
 });
 
+// connect to mySQL database
 connection.connect(function(err) {
     if (err) throw err;
+    // run start prompt
+    // `_res` is an unused param
     startPrompt().then(function(_res) {
+        // once finished destroy connection
         connection.destroy();
     }).catch(function(err) {
         console.log(err);
@@ -30,8 +35,10 @@ function startPrompt() {
             'Add New Product'
         ]
     }]).then(function(answer) {
+        // switch based on command chosen
         switch (answer.command) {
             case 'View Products for Sale':
+                // print all products
                 return viewProducts().then(function(result) {
                     return printItems(result);
                 }).catch(function(err) {
@@ -39,6 +46,7 @@ function startPrompt() {
                     return;
                 });
             case 'View Low Inventory':
+                // print products with less than 5
                 return viewLowInventory().then(function(result) {
                     return printItems(result);
                 }).catch(function(err) {
@@ -46,6 +54,7 @@ function startPrompt() {
                     return;
                 });
             case 'Add to Inventory':
+                // add inventory
                 return addInventory().then(function() {
                     console.log('Successfully added items');
                     return;
@@ -54,6 +63,7 @@ function startPrompt() {
                     return;
                 });
             case 'Add New Product':
+                // add a new product
                 return addProduct().then(function() {
                     console.log('Successfully added products');
                     return;
@@ -68,14 +78,17 @@ function startPrompt() {
 }
 
 function viewProducts() {
+    // query for getting all items in products
     return runQuery("SELECT * FROM products");
 }
 
 function viewLowInventory() {
+    // query for products with a quantity less than 5
     return runQuery("SELECT * FROM products WHERE stock_quantity < 5");
 }
 
 function addInventory() {
+    // query for all products and ask which the user would like to add to
     return runQuery("SELECT * FROM products").then(function(result) {
         return inquirer.prompt([{
             name: 'product_id',
@@ -100,9 +113,11 @@ function addInventory() {
                 }
             }
         }]).then(function(answer) {
+            // query for chosen product
             return runQuery("SELECT * FROM products WHERE item_id=?", answer.product_id).then(function(result) {
                 var newQuantity = parseInt(result[0].stock_quantity) + parseInt(answer.quantity);
                 var product = answer.product_id;
+                // query to update stock quantity with new quantity
                 return runQuery("UPDATE products SET stock_quantity=? WHERE item_id=?", [newQuantity, product]);
             }).catch(function(err) {
                 console.log(err);
@@ -112,6 +127,7 @@ function addInventory() {
 }
 
 function addProduct() {
+    // ask for all the info to add a product
     return inquirer.prompt([{
         name: 'item_id',
         message: 'What is the ID of the product?',
@@ -162,12 +178,14 @@ function addProduct() {
     });
 }
 
+// generic print function to DRY things up
 function printItems(items) {
     items.forEach(function(item) {
         console.log('Item ID: ' + item.item_id + ' | Product Name: ' + item.product_name + ' | Price: ' + item.price + ' | Quantity: ' + item.stock_quantity);
     });
 }
 
+// generic query function to DRY things up
 function runQuery(query, values) {
     return new Promise(function(resolve, reject) {
         connection.query(query, values, function(err, res) {
