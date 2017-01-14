@@ -1,12 +1,13 @@
 // Basic requirements
 var mysql = require('mysql');
 var inquirer = require('inquirer');
+var keys = require('./keys.js');
 
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
-    user: "root",
-    password: process.env.USER_PASS,
+    user: keys.databaseKeys.username,
+    password: keys.databaseKeys.password,
     database: "Bamazon"
 });
 
